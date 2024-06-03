@@ -1,4 +1,4 @@
-# Random-Namer
+# Ranamer
 Flutter app that generates random name for you everytime you press a button, it's found in the main Flutter page as a tutorial.
 Understanding Flutter:
 1. It has the main function just like C to start the app, it's the main point that says to your app: " Go and run yourself buddy! ".
