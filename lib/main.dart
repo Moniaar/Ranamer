@@ -15,13 +15,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 82, 34, 255)),
-        ),
-        home: MyHomePage(),
+      child: Consumer<MyAppState>(
+        builder: (context, appState, child) {
+          return MaterialApp(
+            title: 'Namer App',
+            theme: appState.isDarkMode
+                ? ThemeData.dark()
+                : ThemeData(
+                    useMaterial3: true,
+                    colorScheme: ColorScheme.fromSeed(
+                        seedColor: Color.fromARGB(255, 216, 208, 243)),
+                  ),
+            home: MyHomePage(),
+          );
+        },
       ),
     );
   }
@@ -30,6 +37,7 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
   var history = <WordPair>[];
+  var isDarkMode = false;
 
   GlobalKey? historyListKey;
 
@@ -55,6 +63,11 @@ class MyAppState extends ChangeNotifier {
 
   void removeFavorite(WordPair pair) {
     favorites.remove(pair);
+    notifyListeners();
+  }
+
+  void toggleTheme() {
+    isDarkMode = !isDarkMode;
     notifyListeners();
   }
 }
@@ -83,8 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
         throw UnimplementedError('no widget for $selectedIndex');
     }
 
-    // The container for the current page, with its background color
-    // and subtle switching animation.
     var mainArea = ColoredBox(
       color: colorScheme.surfaceVariant,
       child: AnimatedSwitcher(
@@ -94,11 +105,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.nightlight_round),
+            onPressed: () {
+              var appState = context.read<MyAppState>();
+              appState.toggleTheme();
+            },
+          ),
+        ],
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 450) {
-            // Use a more mobile-friendly layout with BottomNavigationBar
-            // on narrow screens.
             return Column(
               children: [
                 Expanded(child: mainArea),
@@ -229,8 +249,6 @@ class BigCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: AnimatedSize(
           duration: Duration(milliseconds: 200),
-          // Make sure that the compound word wraps correctly when the window
-          // is too narrow.
           child: MergeSemantics(
             child: Wrap(
               children: [
@@ -259,7 +277,19 @@ class FavoritesPage extends StatelessWidget {
 
     if (appState.favorites.isEmpty) {
       return Center(
-        child: Text('Oops!! You deleted all your favorites.'),
+        child: Text(
+          'Oops!! You deleted all your favorites.',
+          style: TextStyle(
+            fontFamily: 'Lato', // Specify the font family you want to use
+            fontSize: 12, // Adjust the font size as needed
+            fontWeight: FontWeight
+                .normal, // Specify the font weight (e.g., normal, bold)
+            fontStyle: FontStyle
+                .normal,// Specify the font style (e.g., normal, italic)
+            letterSpacing: 1.0, // Adjust the letter spacing as needed
+            // You can add more properties here like decoration, etc.
+          ),
+        ),
       );
     }
 
@@ -272,7 +302,6 @@ class FavoritesPage extends StatelessWidget {
               '${appState.favorites.length} favorites:'),
         ),
         Expanded(
-          // Make better use of wide windows with a grid.
           child: GridView(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 400,
@@ -309,15 +338,10 @@ class HistoryListView extends StatefulWidget {
 }
 
 class _HistoryListViewState extends State<HistoryListView> {
-  /// Needed so that [MyAppState] can tell [AnimatedList] below to animate
-  /// new items.
   final _key = GlobalKey();
 
-  /// Used to "fade out" the history items at the top, to suggest continuation.
   static const Gradient _maskingGradient = LinearGradient(
-    // This gradient goes from fully transparent to fully opaque black...
     colors: [Colors.transparent, Colors.black],
-    // ... from the top (transparent) to half (0.5) of the way to the bottom.
     stops: [0.0, 0.5],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -330,8 +354,6 @@ class _HistoryListViewState extends State<HistoryListView> {
 
     return ShaderMask(
       shaderCallback: (bounds) => _maskingGradient.createShader(bounds),
-      // This blend mode takes the opacity of the shader (i.e. our gradient)
-      // and applies it to the destination (i.e. our animated list).
       blendMode: BlendMode.dstIn,
       child: AnimatedList(
         key: _key,
