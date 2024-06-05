@@ -287,7 +287,7 @@ class FavoritesPage extends StatelessWidget {
             fontStyle: FontStyle
                 .normal,// Specify the font style (e.g., normal, italic)
             letterSpacing: 1.0, // Adjust the letter spacing as needed
-            // You can add more properties here like decoration, etc.
+            // We can add more properties here like decoration, etc.
           ),
         ),
       );
@@ -308,25 +308,26 @@ class FavoritesPage extends StatelessWidget {
               childAspectRatio: 400 / 80,
             ),
             children: [
-              for (var pair in appState.favorites)
-                ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
-                    color: theme.colorScheme.primary,
-                    onPressed: () {
-                      appState.removeFavorite(pair);
-                    },
-                  ),
-                  title: Text(
-                    pair.asLowerCase,
-                    semanticsLabel: pair.asPascalCase,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
+                  for (var pair in appState.favorites)
+                    ListTile(
+                      // CircleAvatar is used to add a background circle to wrap the IconButton for the delete icon
+                      leading: CircleAvatar(
+                        backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
+                        // remains inside the CircleAvatar to ensure the delete icon is displayed inside the circle.
+                        child: IconButton(
+                          icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
+                          color: theme.colorScheme.primary,
+                          onPressed: () {
+                            appState.removeFavorite(pair);
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        );
   }
 }
 
