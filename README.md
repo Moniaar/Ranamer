@@ -12,7 +12,8 @@ But we still need to adjust the space between the screens, since expanded area o
 ![image](https://github.com/user-attachments/assets/4edd2e29-b567-402e-b425-a40f2bb0b2a3)
 ![image](https://github.com/user-attachments/assets/fadb2a6e-c25c-45fe-9b41-5f114e40fadf)
 
-![image](https://github.com/user-attachments/assets/48073207-3502-47bd-bd44-4d7db7720cad)
+![image](https://github.com/user-attachments/assets/878b2615-a9ea-4fb7-94b7-4b826f89e738)
+
 
 A few resources to get you started if this is your first Flutter project:
 
