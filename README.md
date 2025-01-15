@@ -9,6 +9,10 @@ Using StatefulWidget, we do that by splitting MyHomePage into 2 separate widgets
 When the onDestinationSelected callback is called, instead of merely printing the new value to console, you assign it to selectedIndex inside a setState() call. This call is similar to the notifyListeners() method used previously—it makes sure that the UI updates.
 But we still need to adjust the space between the screens, since expanded area on the right stays the same. That's because the code isn't using selectedIndex to determine what screen displays.
 
+![image](https://github.com/user-attachments/assets/4edd2e29-b567-402e-b425-a40f2bb0b2a3)
+![image](https://github.com/user-attachments/assets/fadb2a6e-c25c-45fe-9b41-5f114e40fadf)
+
+
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
